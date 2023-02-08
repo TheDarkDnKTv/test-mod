@@ -30,6 +30,21 @@ minecraft {
     runDir = "run"
 }
 
+repositories {
+    maven {
+        name = "ChickenBones maven"
+        url = "http://chickenbones.net/maven/"
+    }
+    maven {
+        name = "forge"
+        url = "https://maven.minecraftforge.net/"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -43,7 +58,9 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    compile "codechicken:CodeChickenCore:${mc_ver}-${ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${mc_ver}-${nei_version}:dev"
+    compile "codechicken:CodeChickenLib:${mc_ver}-${ccl_version}:dev"
 }
 
 processResources {
