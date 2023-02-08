@@ -1,0 +1,1 @@
+item.emerald_sword.name=Emerald sword

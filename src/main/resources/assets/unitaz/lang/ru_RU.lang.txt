@@ -1,0 +1,2 @@
+
+item.emerald_sword.name=Изумрудный меч
