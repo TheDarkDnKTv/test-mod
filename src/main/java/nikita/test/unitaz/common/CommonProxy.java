@@ -1,15 +1,15 @@
-package nikita.test.unitaz;
+package nikita.test.unitaz.common;
 
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import nikita.test.unitaz.ModItems;
 
 
 
-//класс для выполнения действий, которые должны выполняться на стороне и клиента, и сервера.
 
 public class CommonProxy {
-    //класс для выполнения действий, которые должны выполняться на стороне и клиента, и сервера.
+
     public void preInit(FMLPreInitializationEvent event) {
         ModItems.register();
     }
