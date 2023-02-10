@@ -30,6 +30,12 @@ minecraft {
     runDir = "run"
 }
 
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
+}
+
 repositories {
     maven {
         name = "ChickenBones maven"
