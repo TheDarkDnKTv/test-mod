@@ -117,9 +117,9 @@ public static final Set<Block> HARVEST_BLOCKS = Sets.newHashSet();
         HARVEST_BLOCKS.add(Blocks.emerald_ore);
         HARVEST_BLOCKS.add(Blocks.emerald_block);
 
-//        HARVEST_BLOCKS.addAll(RubyAxe.HARVEST_BLOCKS);
-//        HARVEST_BLOCKS.addAll(RubyPickaxe.HARVEST_BLOCKS);
-//        HARVEST_BLOCKS.addAll(RubySpade.HARVEST_BLOCKS);
+        HARVEST_BLOCKS.addAll(BoneAxe.HARVEST_BLOCKS);
+        HARVEST_BLOCKS.addAll(BonePickaxe.HARVEST_BLOCKS);
+        HARVEST_BLOCKS.addAll(BoneSpade.HARVEST_BLOCKS);
     }
 
 
