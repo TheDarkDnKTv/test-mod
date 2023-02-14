@@ -24,6 +24,8 @@ group= "nikita.test.unitaz"
 archivesBaseName = "unitaz"
 
 targetCompatibility = sourceCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
@@ -65,9 +67,9 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compile "codechicken:CodeChickenCore:${mc_ver}-${ccc_version}:dev"
-    compile "codechicken:NotEnoughItems:${mc_ver}-${nei_version}:dev"
-    compile "codechicken:CodeChickenLib:${mc_ver}-${ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${mc_ver}-${ccc_version}:universal"
+    compile "codechicken:NotEnoughItems:${mc_ver}-${nei_version}:universal"
+    compile "codechicken:CodeChickenLib:${mc_ver}-${ccl_version}:universal"
 }
 
 processResources {

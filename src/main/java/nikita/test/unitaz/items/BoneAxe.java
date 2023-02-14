@@ -27,9 +27,9 @@ public class BoneAxe extends ItemTool {
     }
 
     @Override
-    public float func_150893_a(ItemStack toolStack, Block block) {
+    public float getStrVsBlock(ItemStack toolStack, Block block) {
         if (block.getMaterial() != Material.wood && block.getMaterial() != Material.plants && block.getMaterial() != Material.vine)
-            return super.func_150893_a(toolStack, block);
+            return super.getStrVsBlock(toolStack, block);
         return efficiencyOnProperMaterial;
     }
 }
