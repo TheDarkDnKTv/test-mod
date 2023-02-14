@@ -21,12 +21,12 @@ public class ModItems {
     public static void register() {
         GameRegistry.registerItem(DILDO, "dildo");
         GameRegistry.registerItem(RING, "ring");
-        GameRegistry.registerItem(EMERALD_TOOL, "emerald tool");
-        GameRegistry.registerItem(BONE_SWORD, "bone sword");
-        GameRegistry.registerItem(BONE_AXE,"bone axe");
-        GameRegistry.registerItem(BONE_HOE, "bone hoe");
-        GameRegistry.registerItem(BONE_SPADE, "bone spade");
-        GameRegistry.registerItem(BONE_PICKAXE, "bone pickaxe");
+        GameRegistry.registerItem(EMERALD_TOOL, "emerald_tool");
+        GameRegistry.registerItem(BONE_SWORD, "bone_sword");
+        GameRegistry.registerItem(BONE_AXE,"bone_axe");
+        GameRegistry.registerItem(BONE_HOE, "bone_hoe");
+        GameRegistry.registerItem(BONE_SPADE, "bone_spade");
+        GameRegistry.registerItem(BONE_PICKAXE, "bone_pickaxe");
 
     }
 }

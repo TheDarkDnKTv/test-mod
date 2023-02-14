@@ -12,7 +12,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import nikita.test.unitaz.ModItems;
 import nikita.test.unitaz.UnitazMod;
@@ -20,8 +19,6 @@ import nikita.test.unitaz.common.handler.ModTab;
 
 import java.util.List;
 import java.util.Set;
-
-import static nikita.test.unitaz.ModItems.EME_TOOL_MATERIAL;
 
 public class EmeraldTool extends ItemTool {
 
@@ -41,32 +38,61 @@ public class EmeraldTool extends ItemTool {
 //        return 1;
 //    }
 public static final Set<Block> HARVEST_BLOCKS = Sets.newHashSet();
+public static final String[] ToolName = new String[]{
+            "spade",
+            "axe",
+            "pickaxe",
+            "hoe"
+};
+private static String ToolClass;
 
     public EmeraldTool() {
-        super(5F, ModItems.EME_TOOL_MATERIAL, HARVEST_BLOCKS);
+        super(3F, ModItems.EME_TOOL_MATERIAL, HARVEST_BLOCKS);
         setTextureName(UnitazMod.MODID + ":emerald_tool");
         setCreativeTab(ModTab.INSTANCE);
+        for(String ToolName : ToolName)
+        {
+            ToolClass = ToolName;
+        }
 
         final int harvestLvl = ModItems.EME_TOOL_MATERIAL.getHarvestLevel();
+
         setHarvestLevel("axe", harvestLvl);
         setHarvestLevel("pickaxe", harvestLvl);
         setHarvestLevel("shovel", harvestLvl);
     }
 
+    public void toolClass(String ToolClass){
+            if(ToolClass == "pickaxe"){
+                this.ToolClass = "pickaxe";
+            }
+            else if (ToolClass == "axe")
+            {
+                this.ToolClass = "axe";
+            }
+            else if (ToolClass == "hoe")
+            {
+                this.ToolClass = "hoe";
+            }
+            else if (ToolClass == "spade")
+            {
+                this.ToolClass = "spade";
+            }
+    }
+
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        // Добавим суффикс, чтобы к item.balloon было дописано название цвета: item.balloon_*colorName* в зависимости от типа
-
-        return super.getUnlocalizedName(stack) + '_' + ItemDye.field_150921_b[stack.getItemDamage() % ItemDye.field_150921_b.length];
+        return super.getUnlocalizedName(stack) + '_' + this.toolMaterial + '_' + ToolName[0];
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs tab, List items) {
-        for (int damage = 0, size = ItemDye.field_150922_c.length; damage < size; damage++) {
-            items.add(new ItemStack(item, 1, damage));
+        for (int damage = 0, size = ToolName.length; damage < size; damage++) {
+            items.add(new ItemStack(item, 1, ToolName.length));
         }
+
     }
 
     @Override
@@ -113,13 +139,18 @@ public static final Set<Block> HARVEST_BLOCKS = Sets.newHashSet();
     }
 
     static {
-        HARVEST_BLOCKS.add(Blocks.obsidian);
-        HARVEST_BLOCKS.add(Blocks.emerald_ore);
-        HARVEST_BLOCKS.add(Blocks.emerald_block);
-
-        HARVEST_BLOCKS.addAll(BoneAxe.HARVEST_BLOCKS);
-        HARVEST_BLOCKS.addAll(BonePickaxe.HARVEST_BLOCKS);
-        HARVEST_BLOCKS.addAll(BoneSpade.HARVEST_BLOCKS);
+        if (ToolClass == "pickaxe") {
+            HARVEST_BLOCKS.add(Blocks.obsidian);
+            HARVEST_BLOCKS.add(Blocks.emerald_ore);
+            HARVEST_BLOCKS.add(Blocks.emerald_block);
+            HARVEST_BLOCKS.addAll(BonePickaxe.HARVEST_BLOCKS);
+        }
+        if (ToolClass == "axe") {
+            HARVEST_BLOCKS.addAll(BoneAxe.HARVEST_BLOCKS);
+        }
+        if(ToolClass == "spade") {
+            HARVEST_BLOCKS.addAll(BoneSpade.HARVEST_BLOCKS);
+        }
     }
 
 
