@@ -9,7 +9,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -17,42 +19,37 @@ import nikita.test.unitaz.ModItems;
 import nikita.test.unitaz.UnitazMod;
 import nikita.test.unitaz.common.handler.ModTab;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class EmeraldTool extends ItemTool {
+
+    float efficiencyOnProperMaterial = 2.0F;
 
     public EmeraldTool() {
         super(3F, ModItems.EME_TOOL_MATERIAL, null);
         setUnlocalizedName("emerald_tool");
         setTextureName(UnitazMod.MODID + ":emerald_tool");
         setCreativeTab(ModTab.INSTANCE);
-
-
     }
 
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getMetadata();
-        switch (meta){
-            case 1:
-                return super.getUnlocalizedName(stack) + '_' + ToolClass.PICKAXE;
-            case 2:
-                return super.getUnlocalizedName(stack) + '_' + ToolClass.AXE;
-            case 3:
-                return super.getUnlocalizedName(stack) + '_' + ToolClass.HOE;
-            case 4:
-                return super.getUnlocalizedName(stack) + '_' + ToolClass.SPADE;
+        if (meta >= 0 && meta < ToolClass.values().length) {
+            ToolClass itemClass = ToolClass.values()[meta];
+            return super.getUnlocalizedName() + '_' + itemClass.name().toLowerCase();
         }
-        return super.getUnlocalizedName(stack);
+        return super.getUnlocalizedName();
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs tab, List items) {
-        for (int damage = 1, size = ToolClass.values().length; damage <= size; damage++) {
+        for (int damage = 0, size = ToolClass.values().length; damage < size; damage++) {
             items.add(new ItemStack(item, 1, damage));
         }
 
@@ -60,7 +57,7 @@ public class EmeraldTool extends ItemTool {
 
     @Override
     public boolean onItemUse(ItemStack heldStack, EntityPlayer player, World world, int posX, int posY, int posZ, int side, float hitX, float hitY, float hitZ) {
-        if(heldStack.getMetadata() == 3) {
+        if (heldStack.getMetadata() == ToolClass.HOE.ordinal()) {
             if (player.canPlayerEdit(posX, posY, posZ, side, heldStack)) {
                 final UseHoeEvent event = new UseHoeEvent(player, heldStack, world, posX, posY, posZ);
                 if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -91,27 +88,60 @@ public class EmeraldTool extends ItemTool {
 
     @Override
     public float getStrVsBlock(ItemStack toolStack, Block block) {
-//        if (toolStack.getMetadata() == 2 && block.getMaterial() != Material.wood && block.getMaterial() != Material.plants && block.getMaterial() != Material.vine)
-//            return super.getStrVsBlock(toolStack, block);
-//        if (toolStack.getMetadata() == 1 && block.getMaterial() != Material.iron && block.getMaterial() != Material.anvil && block.getMaterial() != Material.rock)
-//            return super.getStrVsBlock(toolStack, block);
-//        return efficiencyOnProperMaterial;
-        return 20.0F;
+        Set effectiveBlocks;
+        if (toolStack.getMetadata() ==  ToolClass.PICKAXE.ordinal()) {
+
+            effectiveBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail);
+            if (block.getMaterial() != Material.iron && block.getMaterial() != Material.anvil && block.getMaterial() != Material.rock && !effectiveBlocks.contains(block)) {
+                return 1.0F;
+            }
+            return efficiencyOnProperMaterial;
+        } else if (toolStack.getMetadata() ==  ToolClass.AXE.ordinal()) {
+            effectiveBlocks = Sets.newHashSet(Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
+            if (block.getMaterial() != Material.wood && block.getMaterial() != Material.plants && block.getMaterial() != Material.vine && !effectiveBlocks.contains(block)) {
+                return 1.0F;
+            }
+                return efficiencyOnProperMaterial;
+        } else if (toolStack.getMetadata() == ToolClass.SPADE.ordinal()) {
+            effectiveBlocks = Sets.newHashSet(Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
+            if (!effectiveBlocks.contains(block)) {
+                return 1.0F;
+            }
+            return efficiencyOnProperMaterial;
+        }
+        return 1.0F;
     }
 
     @Override
-    public void setDamage(ItemStack stack, int damage)
+    public int getMaxDamage(ItemStack stack) {
+        return 0;
+    }
+
+    @Override
+    public boolean canHarvestBlock(Block block,ItemStack toolStack)
     {
-        //ДА ЗДРАСТВУЮТ БЕССМЕРТНЫЕ ЧИТ ПРЕДМЕТЫ. Считать прочность предмета через метаданные грустно(если я правильно понял как работает это)
-
+        Set effectiveBlocks;
+        if (toolStack.getMetadata() ==  ToolClass.PICKAXE.ordinal()) {
+            effectiveBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail);
+            return effectiveBlocks.contains(block);
+        } else if (toolStack.getMetadata() ==  ToolClass.AXE.ordinal()) {
+            effectiveBlocks = Sets.newHashSet(Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
+            return effectiveBlocks.contains(block);
+        } else if (toolStack.getMetadata() == ToolClass.SPADE.ordinal()) {
+            effectiveBlocks = Sets.newHashSet(Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
+            return effectiveBlocks.contains(block);
+        }
+        return false;
     }
-
     @Override
-    public boolean canItemHarvestBlock(Block block) {
-        return true;
+    public int getHarvestLevel(ItemStack stack, String toolClass) {
+////        Integer ret = toolClasses.get(toolClass);
+//        return ret == null ? -1 : ret;
+        return 1;
     }
 
-    static enum ToolClass{
+
+    enum ToolClass {
         PICKAXE,
         AXE,
         HOE,
